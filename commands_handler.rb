@@ -1,5 +1,9 @@
 module CommandsHandler
   def self.do(message)
+    case message
+    when Telegram::Bot::Types::CallbackQuery
+      {chat_id: message.from.id, "text": message.data}
+    when Telegram::Bot::Types::Message
     case (message.text ? message.text : '/start')
 # ---------- Базовые команды ----------
     when '/start' # ----------
@@ -23,12 +27,12 @@ module CommandsHandler
         "reply_markup": Keyboard.remove
       }
 
-# ---------- Раздел "Компании" ----------
+# ---------- Раздел "Главное меню" ----------
     when 'Компании'
       response_params = {
         "chat_id": message.chat.id,
         "text": "Раздел компаний.",
-        "reply_markup": Keyboard.set(:companies)
+        "reply_markup": Keyboard.set(:companies, true)
       }
     else
       response_params = {
@@ -38,5 +42,6 @@ module CommandsHandler
     end
     response_params
   end
+end
 end
 
